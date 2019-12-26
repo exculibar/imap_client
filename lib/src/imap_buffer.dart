@@ -156,7 +156,7 @@ class ImapBuffer {
         .addAll(_buffer.getRange(_bufferPosition, _bufferPosition + length));
     _bufferPosition = _bufferPosition + length;
     if (autoReleaseBuffer) _releaseUsedBuffer();
-    return ImapWord(ImapWordType.string, ascii.decode(charCodes));
+    return ImapWord(ImapWordType.string, utf8.decode(charCodes));
   }
 
   /// Reads a flag starting at the current [_bufferPosition]
