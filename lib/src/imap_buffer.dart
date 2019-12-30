@@ -202,7 +202,16 @@ class ImapBuffer {
     while (!await _isWhitespace() && await _isValidAtomCharCode()) {
       charCodes.add(await _getCharCode(proceed: true));
     }
-    String value = utf8.decode(charCodes);
+    String value = "";
+    try {
+      value = utf8.decode(charCodes);
+    } catch (e) {
+      List<int> charCodes2 = <int>[];
+      charCodes.forEach((v) {
+        charCodes2.add(v <= 127 ? v : 63);
+      });
+      value = ascii.decode(charCodes2);
+    }
     if (autoReleaseBuffer) _releaseUsedBuffer();
     return value == "NIL"
         ? ImapWord(ImapWordType.nil, value)
