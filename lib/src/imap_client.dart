@@ -29,7 +29,7 @@ class ImapClient extends _ImapCommandable {
   ///
   /// [host] and [port] define the server's address. If [secure] is true,
   /// a secure (ssl) socket will be used, an unencrypted one otherwise.
-  Future<void> connect(String host, int port, bool secure) async {
+  Future<void> connect(String host, int port, bool secure, Duration timeout) async {
     _host = host;
     _port = port;
     _secure = secure;
@@ -37,7 +37,7 @@ class ImapClient extends _ImapCommandable {
     _logger.info("Connecting to $host at port $port with secure mode " +
         (secure ? 'on' : 'off'));
     Future<Socket> futureSocket =
-        secure ? SecureSocket.connect(host, port) : Socket.connect(host, port);
+        secure ? SecureSocket.connect(host, port, timeout: timeout) : Socket.connect(host, port, timeout: timeout);
     await futureSocket.then((socket) async {
       _engine = new ImapEngine(socket);
       await _engine.executeCommand(_engine._greeting);
